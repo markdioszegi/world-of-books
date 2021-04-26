@@ -10,8 +10,8 @@ DROP TABLE IF EXISTS marketplaces;
 /* Create tables */
 
 CREATE TABLE listings (
-  id INT NOT NULL,
-  inventory_item_location_id INT NOT NULL,
+  id BINARY(16) NOT NULL,
+  inventory_item_location_id BINARY(16) NOT NULL,
   listing_status INT NOT NULL,
   marketplace INT NOT NULL,
   title TEXT NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE listings (
 );
 
 CREATE TABLE locations (
-  id INT NOT NULL,
+  id BINARY(16) NOT NULL,
   manager_name TEXT NOT NULL,
   phone TEXT NOT NULL,
   address_primary TEXT NOT NULL,
@@ -57,39 +57,3 @@ ALTER TABLE listings
     REFERENCES listing_statuses (id),
   ADD FOREIGN KEY (marketplace)
     REFERENCES marketplaces (id);
-
-/* dummy data */
-INSERT INTO locations VALUES (
-  4,
-  'Manager name',
-  '+36304356364',
-  'primary address',
-  'secondary address',
-  'Hungary',
-  'Budapest',
-  '1007'
-);
-
-INSERT INTO listing_statuses VALUES (
-  5,
-  'A default listing status is unknown.'
-);
-
-INSERT INTO marketplaces VALUES (
-  2,
-  'The Famous Marketplace'
-);
-
-INSERT INTO listings VALUES (
-  1,
-  4,
-  5,
-  2,
-  'Some title',
-  'A long description',
-  674.6478,
-  'EUR',
-  1,
-  '2015/06/04',
-  'someone@somemail.com'
-);

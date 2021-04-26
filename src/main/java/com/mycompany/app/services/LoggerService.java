@@ -1,4 +1,4 @@
-package com.mycompany.app;
+package com.mycompany.app.services;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import com.mycompany.app.App;
 
 public class LoggerService {
     // #region Field vars
@@ -27,22 +28,26 @@ public class LoggerService {
     // #region Constructors
     public LoggerService() {
         setFileName();
+        init();
     }
 
     public LoggerService(String path) {
         setFileName();
         this.dumpFolder = path;
+        init();
     }
 
     public LoggerService(boolean dumpToFile) {
         setFileName();
         this.dumpToFile = dumpToFile;
+        init();
     }
 
     public LoggerService(String path, boolean dumpToFile) {
         setFileName();
         this.dumpFolder = path;
         this.dumpToFile = dumpToFile;
+        init();
     }
     // #endregion
 
@@ -121,6 +126,10 @@ public class LoggerService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void init() {
+        info("Logger service started...");
     }
 
     public void disable() {
