@@ -17,5 +17,6 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 # user defined
-.py
+*.py
+*.csv
 Feladat - Java REST API.pdf
