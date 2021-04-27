@@ -30,23 +30,34 @@ public class App {
         APIService api = new APIService(logger, config);
         // Get others first so we can validate the listings
         // TODO use these
-        // List<Listing> listings = api.getListings();
-        // List<Location> locations = api.getLocations();
-        // List<ListingStatus> listingStatuses = api.getListingStatuses();
-        // List<Marketplace> marketplaces = api.getMarketplaces();
+        List<Listing> listings = api.getListings();
+        List<Location> locations = api.getLocations();
+        List<ListingStatus> listingStatuses = api.getListingStatuses();
+        List<Marketplace> marketplaces = api.getMarketplaces();
 
-        List<Listing> listings = mysql.getListings();
-        List<Location> locations = mysql.getLocations();
-        List<ListingStatus> listingStatuses = mysql.getListingStatuses();
-        List<Marketplace> marketplaces = mysql.getMarketplaces();
+        // List<Listing> listings = mysql.getListings();
+        // List<Location> locations = mysql.getLocations();
+        // List<ListingStatus> listingStatuses = mysql.getListingStatuses();
+        // List<Marketplace> marketplaces = mysql.getMarketplaces();
 
         validation =
                 new ValidationService(listings, locations, listingStatuses, marketplaces, logger);
 
-        Marketplace m = new Marketplace();
-        // m.setId(5);
-        m.setMarketplaceName("Amazon");
-        mysql.insertMarketplace(m);
+        // for (Listing listing : listings) {
+        // mysql.insertListing(listing);
+        // }
+
+        // for (Location location : locations) {
+        // mysql.insertLocation(location);
+        // }
+
+        // for (ListingStatus listingStatus : listingStatuses) {
+        // mysql.insertListingStatus(listingStatus);
+        // }
+
+        // for (Marketplace marketplace : marketplaces) {
+        // mysql.insertMarketplace(marketplace);
+        // }
 
         // testLocationRoute(api, logger);
         // testListingStatusRoute(api);

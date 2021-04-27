@@ -14,6 +14,8 @@ public class ValidationService {
     private List<Marketplace> marketplaces;
     private LoggerService logger;
 
+    private boolean hasInvalidFields = false;
+
     public ValidationService(List<Listing> listings, List<Location> locations,
             List<ListingStatus> listingStatuses, List<Marketplace> marketplaces,
             LoggerService logger) {
@@ -38,9 +40,6 @@ public class ValidationService {
 
             String marketplaceName = "";
 
-            invalidFields.add("currency");
-            invalidFields.add("marketplace");
-
             for (Marketplace marketplace : marketplaces) {
                 if (listing.getMarketplace() == marketplace.getId()) {
                     marketplaceName = marketplace.getMarketplaceName();
@@ -49,12 +48,17 @@ public class ValidationService {
             }
 
             if (invalidFields.size() > 0) {
+                hasInvalidFields = true;
                 for (String invalidField : invalidFields) {
                     IOHandler.writeToFile("importLog.csv", String.format("%s;%s;%s",
                             listing.getId(), marketplaceName, invalidField));
                 }
-                logger.success("Invalid fields successfully exported to importLog.csv.");
             }
         }
+
+        if (hasInvalidFields)
+            logger.error("Validation failed! Invalid fields exported to importLog.csv.");
+        else
+            logger.success("Validation succeeded!");
     }
 }

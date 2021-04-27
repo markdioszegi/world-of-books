@@ -9,10 +9,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import com.mycompany.app.models.Listing;
 import com.mycompany.app.models.ListingStatus;
 import com.mycompany.app.models.Location;
@@ -42,38 +43,45 @@ public class APIService {
     // #region Get a list of specified objects from a route
     private <T> List<T> get(String route, Class<T> classType) {
         // Set the URL based on the API URL
-        // URL newURL = apiURL;
-        String strJson =
-                "[{'id':'abc3452-acef453','inventoryItemLocationId':'abc3452-abef453','listingStatus':3,'marketplace':2,'title':'Some title','description':'A long description','listingPrice':674.6478,'currency':'EUR','quantity':1,'uploadTime':'2015/06/04','ownerEmailAddress':'someone@somemail.com'}]";
+        URL newURL = apiURL;
+        String strJson = "";
 
-        // TODO: uncomment when API is available again
+        try {
+            newURL = new URL(String.format("%s%s?key=%s", apiURL.toURI(), route, apiKey));
+        } catch (MalformedURLException | URISyntaxException urlException) {
+            // TODO Auto-generated catch block
+            urlException.printStackTrace();
+        }
 
-        // try {
-        // newURL = new URL(String.format("%s%s?key=%s", apiURL.toURI(), route, apiKey));
-        // } catch (MalformedURLException | URISyntaxException urlException) {
-        // // TODO Auto-generated catch block
-        // urlException.printStackTrace();
-        // }
+        logger.info(String.format("Getting data from %s...", newURL));
 
-        // // Get content from the API
-        // try {
-        // InputStream is = newURL.openStream();
-        // BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        // while (br.ready()) {
-        // strJson += br.readLine();
-        // }
-        // } catch (Exception exception) {
-        // // TODO: handle exception
-        // exception.printStackTrace();
-        // }
+        // Get content from the API
+        try {
+            InputStream is = newURL.openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            while (br.ready()) {
+                strJson += br.readLine();
+            }
+            br.close();
+            is.close();
+        } catch (Exception exception) {
+            // TODO: handle exception
+            exception.printStackTrace();
+        }
+
+        if (!classType.getSimpleName().equals("Listing"))
+            System.out.println("JSON: " + strJson);
 
         JsonArray array = JsonParser.parseString(strJson).getAsJsonArray();
 
         List<T> result = new ArrayList<T>();
         for (final JsonElement json : array) {
-            T entity = new Gson().fromJson(json, classType);
+            T entity = new GsonBuilder().setDateFormat("MM/dd/yyyy").create().fromJson(json,
+                    classType);
             result.add(entity);
         }
+
+        logger.success("Data retrieved successfully!");
 
         return result;
     }

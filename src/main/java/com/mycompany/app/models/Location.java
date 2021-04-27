@@ -1,16 +1,21 @@
 package com.mycompany.app.models;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 public class Location {
     // #region Field vars
     private String id; // PK
+    @SerializedName("manager_name")
     private String managerName;
     private String phone;
+    @SerializedName("address_primary")
     private String addressPrimary;
+    @SerializedName("address_secondary")
     private String addressSecondary;
     private String country;
     private String town;
+    @SerializedName("postal_code")
     private String postalCode;
     // #endregion
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @param age
@@ -19,13 +20,18 @@ public class Listing {
     private String id; // PK
     private String title;
     private String description;
+    @SerializedName("location_id")
     private String inventoryItemLocationId; // FK
+    @SerializedName("listing_price")
     private float listingPrice;
     private String currency;
     private int quantity;
+    @SerializedName("listing_status")
     private int listingStatus; // FK
     private int marketplace; // FK
+    @SerializedName("upload_time")
     private Date uploadTime;
+    @SerializedName("owner_email_address")
     private String ownerEmailAddress;
     // #endregion
 
@@ -180,41 +186,47 @@ public class Listing {
         }
 
         // CHECK listingStatus not null & has reference to listing status table
-        if (listingStatus == 0) {
-            invalidFields.add("listingStatus");
-        }
-        boolean hasReferenceToListingStatus = false;
-        for (ListingStatus listingStatus : listingStatuses) {
-            if (listingStatus.getId() == this.listingStatus) {
-                hasReferenceToListingStatus = true;
-                break;
+        if (listingStatus != 0) {
+            boolean hasReferenceToListingStatus = false;
+            for (ListingStatus listingStatus : listingStatuses) {
+                if (listingStatus.getId() == this.listingStatus) {
+                    hasReferenceToListingStatus = true;
+                    break;
+                }
             }
-        }
-        if (!hasReferenceToListingStatus) {
+            if (!hasReferenceToListingStatus) {
+                invalidFields.add("listingStatus");
+            }
+        } else {
             invalidFields.add("listingStatus");
         }
 
         // CHECK marketplace not null & has reference to marketplace table
-        if (marketplace == 0) {
-            invalidFields.add("marketplace");
-        }
-        boolean hasReferenceToMarketplace = false;
-        for (Marketplace marketplace : marketplaces) {
-            if (marketplace.getId() == this.marketplace) {
-                hasReferenceToMarketplace = true;
-                break;
+        if (marketplace != 0) {
+            boolean hasReferenceToMarketplace = false;
+            for (Marketplace marketplace : marketplaces) {
+                if (marketplace.getId() == this.marketplace) {
+                    hasReferenceToMarketplace = true;
+                    break;
+                }
             }
-        }
-        if (!hasReferenceToMarketplace) {
+            if (!hasReferenceToMarketplace) {
+                invalidFields.add("marketplace");
+            }
+        } else {
             invalidFields.add("marketplace");
         }
 
         // CHECK ownerEmailAddress not null & is it really an email
-        Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
-                Pattern.CASE_INSENSITIVE);
-        Matcher matcher = validEmail.matcher(ownerEmailAddress);
+        if (ownerEmailAddress != null) {
+            Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+                    Pattern.CASE_INSENSITIVE);
+            Matcher matcher = validEmail.matcher(this.ownerEmailAddress);
 
-        if (ownerEmailAddress == null || !matcher.find()) {
+            if (!matcher.find()) {
+                invalidFields.add("ownerEmailAddress");
+            }
+        } else {
             invalidFields.add("ownerEmailAddress");
         }
 

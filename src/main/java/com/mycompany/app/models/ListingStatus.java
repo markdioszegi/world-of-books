@@ -1,10 +1,12 @@
 package com.mycompany.app.models;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 public class ListingStatus {
     // #region Field vars
     private int id; // PK
+    @SerializedName("status_name")
     private String statusName;
     // #endregion
 
