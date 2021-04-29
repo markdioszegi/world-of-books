@@ -56,14 +56,11 @@ public class APIService {
         logger.info(String.format("Getting data from %s...", newURL));
 
         // Get content from the API
-        try {
-            InputStream is = newURL.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            while (br.ready()) {
-                strJson += br.readLine();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(newURL.openStream()))) {
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                strJson += line;
             }
-            br.close();
-            is.close();
         } catch (Exception exception) {
             // TODO: handle exception
             exception.printStackTrace();
